@@ -1,0 +1,31 @@
+{
+  "name": "mylib",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/Olddude/mylib.git"
+  },
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "prepare": "tsc --project ./tsconfig.app.json",
+    "build": "echo no build"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "log4js": "^6.9.1",
+    "passport": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "18.15.0",
+    "@types/passport": "^1.0.12"
+  }
+}
