@@ -1,5 +1,7 @@
-import app from './app'
+import { logger } from 'mylib'
 
-app.listen(8000, () => {
-  console.log('listening on http://localhost:8000')
+import server from './server'
+
+server.listen(8000, () => {
+  logger.log('listening on http://localhost:8000')
 })

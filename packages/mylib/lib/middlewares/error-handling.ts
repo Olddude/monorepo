@@ -10,7 +10,10 @@ export function errorHandling(
 ): void {
   if (error) {
     const { headers, body } = req
-    logger.error('%j', { error, request: { headers, body } })
+    logger.error('%j', {
+      error,
+      request: { headers, body, cwd: process.cwd() },
+    })
     res.status(error.status || 500).json({
       message: error.message || 'Internal Server Error',
     })
