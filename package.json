@@ -5,14 +5,16 @@
   "engines": {
     "node": ">=18"
   },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "clean": "git clean -X -d -f",
     "lint": "eslint .",
-    "setup": "lerna exec yarn --concurrency 1",
-    "build": "lerna exec --concurrency 1 -- yarn build",
-    "test": "lerna exec --concurrency 1 -- yarn test",
+    "build": "lerna run build",
     "up": "docker-compose up --build",
-    "down": "docker-compose down --rmi local --volumes",
+    "down": "docker-compose down --rmi local --volumes --remove-orphans",
     "start": "nodemon",
     "serve": "serve --listen 3000"
   },

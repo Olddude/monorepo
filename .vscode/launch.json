@@ -2,10 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug-Server",
+      "name": "debug-identity-service",
       "type": "node",
       "request": "attach",
       "port": 9229,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/opt/monorepo"
+    },
+    {
+      "name": "debug-domain-service",
+      "type": "node",
+      "request": "attach",
+      "port": 9230,
       "address": "localhost",
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "/opt/monorepo"

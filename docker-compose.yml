@@ -1,37 +1,79 @@
 version: "3.8"
 
+volumes:
+  identity-service-db_data:
+  domain-service-db_data:
+
 services:
-  myapp:
+  filesystem:
     build:
       context: .
-      dockerfile: ./packages/myapp/Dockerfile
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000"
-      - "9229:9229"
-    environment:
-      NODE_ENV: development
-      LOG_LEVEL: debug
-      PORT: 8000
-      DEBUG_PORT: 9229
-      HOST: localhost
-      DB_HOST: myappdb
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: myappdb
-    depends_on:
-      - myappdb
+      - "3000:3000"
 
-  myappdb:
+  identity-service-db:
     image: postgres:latest
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: myappdb
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $IDENTITY_DB
     volumes:
-      - myappdb_data:/var/lib/postgresql/data
+      - identity-service-db_data:/var/lib/postgresql/data
 
-volumes:
-  myappdb_data:
+  identity-service:
+    build:
+      context: .
+      dockerfile: ./packages/identity-service/Dockerfile
+    ports:
+      - "8000:8000"
+      - "9229:9229"
+    environment:
+      NODE_ENV: $NODE_ENV
+      LOG_LEVEL: $LOG_LEVEL
+      PORT: $PORT
+      DEBUG_PORT: $DEBUG_PORT
+      HOST: $HOST
+      DB_PORT: $DB_PORT
+      DB_HOST: identity-service-db
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $IDENTITY_DB
+
+    depends_on:
+      - identity-service-db
+
+  domain-service-db:
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $DOMAIN_DB
+    volumes:
+      - domain-service-db_data:/var/lib/postgresql/data
+
+  domain-service:
+    build:
+      context: .
+      dockerfile: ./packages/domain-service/Dockerfile
+    ports:
+      - "8001:8000"
+      - "9230:9229"
+    environment:
+      NODE_ENV: $NODE_ENV
+      LOG_LEVEL: $LOG_LEVEL
+      PORT: $PORT
+      DEBUG_PORT: $DEBUG_PORT
+      HOST: $HOST
+      DB_HOST: domain-service-db
+      DB_PORT: $DB_PORT
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $DOMAIN_DB
+
+    depends_on:
+      - domain-service-db
