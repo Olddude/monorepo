@@ -22,6 +22,25 @@ const swaggerMiddlewares = createSwaggerMiddlewares({
           scheme: 'basic',
         },
       },
+      schemas: {
+        User: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+              description: 'User unique identifier',
+            },
+            username: {
+              type: 'string',
+              description: 'User name',
+            },
+            password: {
+              type: 'string',
+              description: 'User password',
+            },
+          },
+        },
+      },
     },
     security: [
       {
@@ -29,57 +48,90 @@ const swaggerMiddlewares = createSwaggerMiddlewares({
       },
     ],
     paths: {
-      '/error': {
+      '/users': {
         get: {
-          summary:
-            'An endpoint that always throws an error for testing purposes',
-          responses: {
-            '500': {
-              description: 'An error occurred',
-            },
-            // Other responses...
-          },
-        },
-      },
-      '/add': {
-        get: {
-          summary: 'Adds two numbers together',
-          parameters: [
-            {
-              name: 'left',
-              in: 'query',
-              required: true,
-              schema: {
-                type: 'integer',
-              },
-            },
-            {
-              name: 'right',
-              in: 'query',
-              required: true,
-              schema: {
-                type: 'integer',
-              },
-            },
-          ],
+          summary: 'Fetches all users from the database',
           responses: {
             '200': {
-              description: 'Addition successful',
+              description: 'Fetch successful',
               content: {
                 'application/json': {
                   schema: {
-                    type: 'object',
-                    properties: {
-                      result: {
-                        type: 'integer',
-                      },
+                    type: 'array',
+                    items: {
+                      $ref: '#/components/schemas/User',
                     },
                   },
                 },
               },
             },
-            '400': {
-              description: 'Invalid left or right',
+            // Other responses...
+          },
+          post: {
+            summary: 'Creates a new user in the database',
+            requestBody: {
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      username: {
+                        type: 'string',
+                      },
+                      password: {
+                        type: 'string',
+                      },
+                    },
+                    required: ['username', 'password'],
+                  },
+                },
+              },
+            },
+            responses: {
+              '200': {
+                description: 'Create successful',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        message: {
+                          type: 'string',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              // Other responses...
+            },
+          },
+        },
+        post: {
+          summary: 'Creates a new user in the database',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    username: {
+                      type: 'string',
+                    },
+                    password: {
+                      type: 'string',
+                    },
+                  },
+                  required: ['username', 'password'],
+                },
+              },
+            },
+          },
+          responses: {
+            '200': {
+              description: 'Create successful',
               content: {
                 'application/json': {
                   schema: {
@@ -93,49 +145,127 @@ const swaggerMiddlewares = createSwaggerMiddlewares({
                 },
               },
             },
-            // Other responses...
           },
         },
       },
-      '/users': {
+      '/users/{userId}': {
         get: {
-          summary: 'Fetches all users from the database',
+          summary: 'Fetches a user from the database by ID',
+          parameters: [
+            {
+              name: 'userId',
+              in: 'path',
+              required: true,
+              schema: {
+                type: 'string',
+              },
+            },
+          ],
           responses: {
             '200': {
               description: 'Fetch successful',
               content: {
                 'application/json': {
                   schema: {
-                    type: 'array',
-                    items: {
-                      $ref: '#/definitions/User',
+                    $ref: '#/components/schemas/User',
+                  },
+                },
+              },
+            },
+            '404': {
+              description: 'User not found',
+            },
+            // Other responses...
+          },
+        },
+        put: {
+          summary: 'Updates a user in the database by ID',
+          parameters: [
+            {
+              name: 'userId',
+              in: 'path',
+              required: true,
+              schema: {
+                type: 'string',
+              },
+            },
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    username: {
+                      type: 'string',
+                    },
+                    password: {
+                      type: 'string',
+                    },
+                  },
+                  required: ['username', 'password'],
+                },
+              },
+            },
+          },
+          responses: {
+            '200': {
+              description: 'Update successful',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: {
+                        type: 'string',
+                      },
                     },
                   },
                 },
               },
             },
+            '404': {
+              description: 'User not found',
+            },
+            // Other responses...
+          },
+        },
+        delete: {
+          summary: 'Deletes a user from the database by ID',
+          parameters: [
+            {
+              name: 'userId',
+              in: 'path',
+              required: true,
+              schema: {
+                type: 'string',
+              },
+            },
+          ],
+          responses: {
+            '200': {
+              description: 'Delete successful',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      message: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            '404': {
+              description: 'User not found',
+            },
             // Other responses...
           },
         },
       },
-      // Other paths...
-    },
-    definitions: {
-      User: {
-        type: 'object',
-        properties: {
-          id: {
-            type: 'string',
-            description: 'User unique identifier',
-          },
-          name: {
-            type: 'string',
-            description: 'User name',
-          },
-          // Other User properties...
-        },
-      },
-      // Other definitions...
     },
   },
   apis: ['http://localhost:8000'],

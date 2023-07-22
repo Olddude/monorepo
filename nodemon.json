@@ -2,7 +2,7 @@
   "watch": ["packages/*/src"],
   "ext": "ts",
   "ignore": ["**/*.spec.ts", "**/*.test.ts", "**/dist"],
-  "exec": "yarn install && yarn build && yarn down && yarn up",
+  "exec": "yarn install && yarn down && yarn up",
   "inspect": true,
   "verbose": true
 }

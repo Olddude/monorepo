@@ -1,33 +1,10 @@
-import { Calc, router, createBasicAuthMiddleware } from '@monorepo/core'
+import { router, createBasicAuthMiddleware } from '@monorepo/core'
 import { db } from './db'
-import { logger } from './logger'
 import { auth } from './auth'
+import { v4 } from 'uuid'
+import { hashSync } from 'bcrypt'
 
 const basicAuthMiddleware = createBasicAuthMiddleware(auth)
-
-router.get('/error', basicAuthMiddleware, (req, _res, next) => {
-  try {
-    logger.info(req['user'])
-    throw new Error('foobar')
-  } catch (error) {
-    next(error)
-  }
-})
-
-router.get('/add', basicAuthMiddleware, (req, res) => {
-  const { left, right } = req.query
-  if (left && right) {
-    const leftNum = Number.parseInt(left.toString(), 10)
-    const rightNum = Number.parseInt(right.toString(), 10)
-    res.json({
-      result: new Calc(logger).add(leftNum, rightNum),
-    })
-  } else {
-    res.status(400).json({
-      message: 'invalid left or right',
-    })
-  }
-})
 
 router.get('/users', basicAuthMiddleware, async (req, res, next) => {
   try {
@@ -35,6 +12,74 @@ router.get('/users', basicAuthMiddleware, async (req, res, next) => {
     res.json(users)
   } catch (err) {
     next(err)
+  }
+})
+
+router.get('/users/:userId', basicAuthMiddleware, async (req, res, next) => {
+  try {
+    const { userId } = req.params
+    const user = await db('users').where({ id: userId }).first()
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    res.json(user)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.post('/users', basicAuthMiddleware, async (req, res, next) => {
+  try {
+    const { username, password } = req.body
+    await db('users').insert({
+      id: v4(),
+      username,
+      password: hashSync(password, 10),
+    })
+    res.json({ message: 'success' })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.put('/users/:userId', basicAuthMiddleware, async (req, res, next) => {
+  try {
+    const { userId } = req.params
+    const { username, password } = req.body
+    const hashedPassword = hashSync(password, 10)
+    const targetUser = await db('users').where({ id: userId }).first()
+
+    if (!targetUser) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    await db('users').where({ id: userId }).update({
+      username,
+      password: hashedPassword,
+    })
+
+    res.json({ message: 'success' })
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.delete('/users/:userId', basicAuthMiddleware, async (req, res, next) => {
+  try {
+    const { userId } = req.params
+    const targetUser = await db('users').where({ id: userId }).first()
+
+    if (!targetUser) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    await db('users').where({ id: userId }).delete()
+
+    res.json({ message: 'User successfully deleted' })
+  } catch (error) {
+    next(error)
   }
 })
 
