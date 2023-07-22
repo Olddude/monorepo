@@ -6,11 +6,5 @@
     "sourceMap": true,
     "rootDir": "./lib",
     "outDir": "./dist"
-  },
-  "include": [
-    "lib/**/*.ts"
-  ],
-  "exclude": [
-    "dist/**/*"
-  ]
+  }
 }

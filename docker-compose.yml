@@ -1,13 +1,6 @@
 version: "3.8"
 
 services:
-  monorepo:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-
   myapp:
     build:
       context: .

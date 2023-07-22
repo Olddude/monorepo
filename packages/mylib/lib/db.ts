@@ -1,20 +1,19 @@
-import * as path from 'node:path'
-import knex from 'knex'
+import knex, { Knex } from 'knex'
 
-import { config } from './config'
-
-const { dbHost, dbPort, dbUser, dbPassword, dbName } = config
-
-export const db = knex({
-  client: 'pg',
+export interface DbConfig {
+  client: string
   connection: {
-    host: dbHost,
-    user: dbUser,
-    password: dbPassword,
-    database: dbName,
-    port: Number.parseInt(dbPort, 10),
-  },
+    host: string
+    user: string
+    password: string
+    database: string
+    port: number
+  }
   migrations: {
-    directory: path.resolve(process.cwd(), './dist/migrations'),
-  },
-})
+    directory: string
+  }
+}
+
+export function createDb(config: DbConfig): Knex<unknown, unknown[]> {
+  return knex(config)
+}

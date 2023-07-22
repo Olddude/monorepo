@@ -2,13 +2,10 @@
   "name": "myapp",
   "version": "1.0.0",
   "license": "MIT",
+  "type": "commonjs",
+  "main": "index.js",
   "engines": {
     "node": ">=18"
-  },
-  "scripts": {
-    "prebuild": "rm -rf ./dist",
-    "build": "tsc --project ./tsconfig.app.json",
-    "start": "node --inspect=0.0.0.0:9229 ./dist/index.js"
   },
   "dependencies": {
     "mylib": "file:../mylib",

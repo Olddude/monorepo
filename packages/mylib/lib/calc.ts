@@ -1,23 +1,25 @@
-import { logger } from './logger'
+import { Logger } from 'log4js'
 
-export abstract class Calc {
-  static add(left: number, right: number): number {
+export class Calc {
+  constructor(private readonly logger: Logger) {}
+
+  add(left: number, right: number): number {
     return left + right
   }
 
-  static subtract(left: number, right: number): number {
+  subtract(left: number, right: number): number {
     return left - right
   }
 
-  static multiply(left: number, right: number): number {
+  multiply(left: number, right: number): number {
     return left * right
   }
 
-  static divide(left: number, right: number): number | undefined {
+  divide(left: number, right: number): number | undefined {
     try {
       return left / right
     } catch (error) {
-      logger.error(error)
+      this.logger.error(error)
       return undefined
     }
   }

@@ -1,21 +1,14 @@
-import { hashSync } from 'bcrypt'
-import { db } from 'mylib'
-import { v4 } from 'uuid'
+const { hashSync } = require('bcrypt')
+const { v4 } = require('uuid')
 
-export interface User {
-  readonly id: string
-  readonly username: string
-  readonly password: string
-}
-
-export async function up(): Promise<void> {
+exports.up = async function up(db) {
   await db.schema.createTable('users', (table) => {
     table.uuid('id').primary()
     table.string('username').notNullable()
     table.string('password').notNullable()
   })
 
-  const users: User[] = [
+  const users = [
     {
       id: v4(),
       username: 'admin',
@@ -26,6 +19,6 @@ export async function up(): Promise<void> {
   await db.batchInsert('users', users)
 }
 
-export async function down(): Promise<void> {
+exports.down = async function (db) {
   await db.schema.dropTableIfExists('users')
 }

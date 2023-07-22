@@ -1,8 +1,8 @@
 {
   "watch": ["packages/**/src", "packages/**/lib"],
   "ext": "ts",
-  "ignore": ["**/*.spec.ts", "**/*.test.ts"],
-  "exec": "yarn install --frozen-lockfile && yarn setup && yarn build && yarn down && yarn up",
+  "ignore": ["**/*.spec.*", "**/*.test.*"],
+  "exec": "yarn install --frozen-lockfile && yarn setup && yarn down && yarn up",
   "inspect": true,
   "verbose": true
 }
