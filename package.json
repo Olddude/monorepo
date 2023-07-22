@@ -13,6 +13,7 @@
     "clean": "git clean -X -d -f",
     "lint": "eslint .",
     "build": "lerna run build",
+    "postinstall": "yarn build",
     "up": "docker-compose up --build",
     "down": "docker-compose down --rmi local --volumes --remove-orphans",
     "start": "nodemon",

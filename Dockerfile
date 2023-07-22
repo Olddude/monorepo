@@ -5,4 +5,4 @@ RUN apk add python3 make gcc g++
 COPY . .
 RUN yarn install
 RUN yarn build
-CMD yarn serve --listen 3000
+CMD yarn serve

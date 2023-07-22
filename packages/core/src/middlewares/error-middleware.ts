@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import { Logger } from 'log4js'
 
 export function createErrorMiddleware(logger: Logger) {
-  return function errorHandling(
+  return function errorMiddleware(
     error: Error & { status: number | undefined },
     req: Request,
     res: Response,

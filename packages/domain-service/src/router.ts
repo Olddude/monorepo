@@ -1,26 +1,11 @@
-import { Calc, router } from '@monorepo/core'
+import { Calc, router, createBasicAuthMiddleware } from '@monorepo/core'
 import { db } from './db'
 import { logger } from './logger'
+import { auth } from './auth'
 
-router.get('/setup', async (_req, res, next) => {
-  try {
-    await db.migrate.latest()
-    res.json({ message: 'success' })
-  } catch (error) {
-    next(error)
-  }
-})
+const basicAuthMiddleware = createBasicAuthMiddleware(auth)
 
-router.get('/teardown', async (_req, res, next) => {
-  try {
-    await db.migrate.down()
-    res.json({ message: 'success' })
-  } catch (error) {
-    next(error)
-  }
-})
-
-router.get('/error', (req, _res, next) => {
+router.get('/error', basicAuthMiddleware, (req, _res, next) => {
   try {
     logger.info(req['user'])
     throw new Error('foobar')
@@ -29,7 +14,7 @@ router.get('/error', (req, _res, next) => {
   }
 })
 
-router.get('/add', (req, res) => {
+router.get('/add', basicAuthMiddleware, (req, res) => {
   const { left, right } = req.query
   if (left && right) {
     const leftNum = Number.parseInt(left.toString(), 10)
@@ -44,7 +29,7 @@ router.get('/add', (req, res) => {
   }
 })
 
-router.get('/users', async (req, res, next) => {
+router.get('/users', basicAuthMiddleware, async (req, res, next) => {
   try {
     const users = await db('users').select()
     res.json(users)
