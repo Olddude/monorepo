@@ -17,128 +17,30 @@ const swaggerMiddlewares = createSwaggerMiddlewares({
     },
     components: {
       securitySchemes: {
-        basicAuth: {
-          type: 'http',
-          scheme: 'basic',
+        OAuth2: {
+          type: 'oauth2',
+          flows: {
+            clientCredentials: {
+              tokenUrl: 'http://localhost:8000/oauth/token', // Your Identity server token endpoint
+              scopes: {
+                'write:*': 'write access',
+                'read:*': 'read access',
+                'delete:*': 'delete access',
+              },
+            },
+          },
         },
       },
+      schemas: {},
     },
     security: [
       {
-        basicAuth: [],
+        OAuth2: ['write:*', 'read:*', 'delete:*'], // Define scopes here that apply for all routes
       },
     ],
-    paths: {
-      '/error': {
-        get: {
-          summary:
-            'An endpoint that always throws an error for testing purposes',
-          responses: {
-            '500': {
-              description: 'An error occurred',
-            },
-            // Other responses...
-          },
-        },
-      },
-      '/add': {
-        get: {
-          summary: 'Adds two numbers together',
-          parameters: [
-            {
-              name: 'left',
-              in: 'query',
-              required: true,
-              schema: {
-                type: 'integer',
-              },
-            },
-            {
-              name: 'right',
-              in: 'query',
-              required: true,
-              schema: {
-                type: 'integer',
-              },
-            },
-          ],
-          responses: {
-            '200': {
-              description: 'Addition successful',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      result: {
-                        type: 'integer',
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            '400': {
-              description: 'Invalid left or right',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    properties: {
-                      message: {
-                        type: 'string',
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            // Other responses...
-          },
-        },
-      },
-      '/users': {
-        get: {
-          summary: 'Fetches all users from the database',
-          responses: {
-            '200': {
-              description: 'Fetch successful',
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'array',
-                    items: {
-                      $ref: '#/definitions/User',
-                    },
-                  },
-                },
-              },
-            },
-            // Other responses...
-          },
-        },
-      },
-      // Other paths...
-    },
-    definitions: {
-      User: {
-        type: 'object',
-        properties: {
-          id: {
-            type: 'string',
-            description: 'User unique identifier',
-          },
-          name: {
-            type: 'string',
-            description: 'User name',
-          },
-          // Other User properties...
-        },
-      },
-      // Other definitions...
-    },
+    paths: {},
   },
-  apis: ['http://localhost:8001'],
+  apis: [],
 })
 
 export const app = createApp()

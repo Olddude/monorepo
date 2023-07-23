@@ -9,6 +9,7 @@ import { logger } from './logger'
 import { auth } from './auth'
 import { Paths } from './docs/paths'
 import { Schemas } from './docs/schemas'
+import cors = require('cors')
 
 const swaggerJson = {
   swaggerDefinition: {
@@ -42,7 +43,19 @@ const swaggerJson = {
   apis: [],
 }
 
+const corsOptions = {
+  origin: [
+    'http://localhost:8001',
+    'http://localhost:3000',
+    'http://localhost:4200',
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: true, // This allows the session cookie to be sent back and forth
+}
+
 export const app = createApp()
+app.use(cors(corsOptions))
 app.use(createAuthInitializeMiddleware(auth))
 app.use(router)
 app.use('/swagger.json', (_req, res) => res.json(swaggerJson))
