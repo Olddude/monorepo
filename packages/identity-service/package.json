@@ -9,7 +9,9 @@
     "clean": "rm -rf ./dist",
     "prebuild": "yarn clean",
     "build": "tsc --project tsconfig.app.json --sourceMap && rm -rf ./dist/migrations/*.d.ts ./dist/migrations/*.js.map",
-    "build:watch": "tsc --project tsconfig.app.json --watch"
+    "build:watch": "tsc --project tsconfig.app.json --watch",
+    "prestart": "yarn build",
+    "start": "node --inspect=0.0.0.0:9229 ./dist/index.js"
   },
   "dependencies": {
     "@monorepo/core": "1.0.0",

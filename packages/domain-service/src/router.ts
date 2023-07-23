@@ -1,9 +1,11 @@
-import { Calc, router, createBasicAuthMiddleware } from '@monorepo/core'
+import { Calc, createRouter, createBasicAuthMiddleware } from '@monorepo/core'
 import { db } from './db'
 import { logger } from './logger'
 import { auth } from './auth'
 
 const basicAuthMiddleware = createBasicAuthMiddleware(auth)
+
+export const router = createRouter()
 
 router.get('/error', basicAuthMiddleware, (req, _res, next) => {
   try {
@@ -37,5 +39,3 @@ router.get('/users', basicAuthMiddleware, async (req, res, next) => {
     next(err)
   }
 })
-
-export { router }

@@ -1,3 +1,6 @@
 import { Router } from 'express'
 
-export const router: Router = Router()
+export function createRouter(): Router {
+  const router: Router = Router()
+  return router
+}

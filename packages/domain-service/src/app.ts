@@ -1,5 +1,5 @@
 import {
-  app,
+  createApp,
   createAuthInitializeMiddleware,
   createErrorMiddleware,
   createSwaggerMiddlewares,
@@ -141,9 +141,8 @@ const swaggerMiddlewares = createSwaggerMiddlewares({
   apis: ['http://localhost:8001'],
 })
 
+export const app = createApp()
 app.use(createAuthInitializeMiddleware(auth))
 app.use(router)
 app.use('/swagger', ...swaggerMiddlewares)
 app.use(createErrorMiddleware(logger))
-
-export { app }
