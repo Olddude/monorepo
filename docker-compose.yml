@@ -34,7 +34,7 @@ services:
   #     DB_HOST: identity-service-db
   #     POSTGRES_USER: $POSTGRES_USER
   #     POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-  #     POSTGRES_DB: $IDENTITY_DB
+  #     POSTGRES_DB: identity-service-db
 
   #   depends_on:
   #     - identity-service-db
@@ -67,7 +67,7 @@ services:
   #     DB_PORT: $DB_PORT
   #     POSTGRES_USER: $POSTGRES_USER
   #     POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-  #     POSTGRES_DB: $DOMAIN_DB
+  #     POSTGRES_DB: domain-service-db
 
   #   depends_on:
   #     - domain-service-db
