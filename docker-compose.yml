@@ -2,15 +2,9 @@ version: "3.8"
 
 volumes:
   identity-service-db_data:
-  # domain-service-db_data:
+  domain-service-db_data:
 
 services:
-  # filesystem:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
 
   identity-service-db:
     image: postgres:latest
@@ -45,35 +39,35 @@ services:
     depends_on:
       - identity-service-db
 
-  # domain-service-db:
-  #   image: postgres:latest
-  #   ports:
-  #     - "5433:5432"
-  #   environment:
-  #     POSTGRES_USER: $POSTGRES_USER
-  #     POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-  #     POSTGRES_DB: $DOMAIN_DB
-  #   volumes:
-  #     - domain-service-db_data:/var/lib/postgresql/data
+  domain-service-db:
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $DOMAIN_DB
+    volumes:
+      - domain-service-db_data:/var/lib/postgresql/data
 
-  # domain-service:
-  #   build:
-  #     context: .
-  #     dockerfile: ./packages/domain-service/Dockerfile
-  #   ports:
-  #     - "8001:8000"
-  #     - "9230:9229"
-  #   environment:
-  #     NODE_ENV: $NODE_ENV
-  #     LOG_LEVEL: $LOG_LEVEL
-  #     PORT: $PORT
-  #     DEBUG_PORT: $DEBUG_PORT
-  #     HOST: $HOST
-  #     DB_HOST: domain-service-db
-  #     DB_PORT: $DB_PORT
-  #     POSTGRES_USER: $POSTGRES_USER
-  #     POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-  #     POSTGRES_DB: $DOMAIN_DB
+  domain-service:
+    build:
+      context: .
+      dockerfile: ./packages/domain-service/Dockerfile
+    ports:
+      - "8001:8000"
+      - "9230:9229"
+    environment:
+      NODE_ENV: $NODE_ENV
+      LOG_LEVEL: $LOG_LEVEL
+      PORT: $PORT
+      DEBUG_PORT: $DEBUG_PORT
+      HOST: $HOST
+      DB_HOST: domain-service-db
+      DB_PORT: $DB_PORT
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $DOMAIN_DB
 
-  #   depends_on:
-  #     - domain-service-db
+    depends_on:
+      - domain-service-db

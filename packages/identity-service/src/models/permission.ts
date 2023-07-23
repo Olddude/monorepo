@@ -1,6 +1,6 @@
 import { Role } from './role'
 
-export interface Permission {
+export type Permission = {
   readonly id: string
   readonly name: string
   readonly roles?: Role[]
