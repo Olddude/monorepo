@@ -14,7 +14,7 @@ async function main() {
     const logger = await createIdentityServiceLogger(config.loggerConfig)
     const database = await createIdentityServiceDatabase(config.dbConfig)
     const auth = await createIdentityServiceAuth(database)
-    const router = await createIdentityServerRouter(auth, database, logger)
+    const router = await createIdentityServerRouter(auth, database)
     const app = await createIdentityServiceApp(auth, router, logger)
     const server = await createIdentityServiceServer(app)
 

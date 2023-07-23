@@ -23,7 +23,7 @@ export function createDomainServiceConfig() {
         host: process.env.DB_HOST || 'localhost',
         user: process.env.POSTGRES_USER || 'postgres',
         password: process.env.POSTGRES_PASSWORD || 'postgres',
-        database: process.env.POSTGRES_DB || 'identity_db',
+        database: process.env.POSTGRES_DB || 'postgres',
         port: Number.parseInt(process.env.DB_PORT || '5432', 10),
       },
       migrations: {

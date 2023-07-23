@@ -10,11 +10,10 @@ import { createOAuthRouter } from './routes/oauth'
 export async function createIdentityServerRouter(
   auth: PassportStatic,
   db: Knex,
-  logger: Logger,
 ) {
   const router = Router()
   router.use(await createUsersRouter(auth, db))
   router.use(await createRolesRouter(auth, db))
-  router.use(await createOAuthRouter(db, logger))
+  router.use(await createOAuthRouter(db))
   return router
 }

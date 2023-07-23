@@ -1,13 +1,14 @@
 import * as express from 'express'
+import * as cors from 'cors'
 import { Router } from 'express'
 import { PassportStatic } from 'passport'
+import { Logger } from 'log4js'
 
 import { createAuthInitializeMiddleware } from './middlewares/auth-initialize.middleware'
 import { createErrorMiddleware } from './middlewares/error.middleware'
 import { createSwaggerMiddlewares } from './middlewares/swagger-middlewares'
 import { Paths } from './docs/paths'
 import { Schemas } from './docs/schemas'
-import { Logger } from 'log4js'
 
 export async function createDomainServiceApp(
   auth: PassportStatic,
@@ -48,9 +49,18 @@ export async function createDomainServiceApp(
     },
     apis: [],
   }
+
+  const corsOptions = {
+    origin: ['http://localhost:8000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['*'],
+    credentials: true, // This allows the session cookie to be sent back and forth
+  }
+
   const app = express()
   app.use(express.urlencoded({ extended: true }))
   app.use(express.json())
+  app.use(cors(corsOptions))
   app.use(createAuthInitializeMiddleware(auth))
   app.use(router)
   app.use('/swagger.json', (_req, res) => res.json(swaggerJson))

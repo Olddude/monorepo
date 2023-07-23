@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "debug-identity-service",
+      "name": "[Docker] debug-identity-service",
       "type": "node",
       "request": "attach",
       "port": 9229,
@@ -11,7 +11,7 @@
       "remoteRoot": "/opt/monorepo"
     },
     {
-      "name": "debug-domain-service",
+      "name": "[Docker] debug-domain-service",
       "type": "node",
       "request": "attach",
       "port": 9230,

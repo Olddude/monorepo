@@ -13,31 +13,31 @@ services:
     environment:
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $IDENTITY_DB
+      POSTGRES_DB: identity-service-db
     volumes:
       - identity-service-db_data:/var/lib/postgresql/data
 
-  identity-service:
-    build:
-      context: .
-      dockerfile: ./packages/identity-service/Dockerfile
-    ports:
-      - "8000:8000"
-      - "9229:9229"
-    environment:
-      NODE_ENV: $NODE_ENV
-      LOG_LEVEL: $LOG_LEVEL
-      PORT: $PORT
-      DEBUG_PORT: $DEBUG_PORT
-      HOST: $HOST
-      DB_PORT: $DB_PORT
-      DB_HOST: identity-service-db
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $IDENTITY_DB
+  # identity-service:
+  #   build:
+  #     context: .
+  #     dockerfile: ./packages/identity-service/Dockerfile
+  #   ports:
+  #     - "8000:8000"
+  #     - "9229:9229"
+  #   environment:
+  #     NODE_ENV: $NODE_ENV
+  #     LOG_LEVEL: $LOG_LEVEL
+  #     PORT: $PORT
+  #     DEBUG_PORT: $DEBUG_PORT
+  #     HOST: $HOST
+  #     DB_PORT: $DB_PORT
+  #     DB_HOST: identity-service-db
+  #     POSTGRES_USER: $POSTGRES_USER
+  #     POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+  #     POSTGRES_DB: $IDENTITY_DB
 
-    depends_on:
-      - identity-service-db
+  #   depends_on:
+  #     - identity-service-db
 
   domain-service-db:
     image: postgres:latest
@@ -46,28 +46,28 @@ services:
     environment:
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $DOMAIN_DB
+      POSTGRES_DB: domain-service-db
     volumes:
       - domain-service-db_data:/var/lib/postgresql/data
 
-  domain-service:
-    build:
-      context: .
-      dockerfile: ./packages/domain-service/Dockerfile
-    ports:
-      - "8001:8000"
-      - "9230:9229"
-    environment:
-      NODE_ENV: $NODE_ENV
-      LOG_LEVEL: $LOG_LEVEL
-      PORT: $PORT
-      DEBUG_PORT: $DEBUG_PORT
-      HOST: $HOST
-      DB_HOST: domain-service-db
-      DB_PORT: $DB_PORT
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $DOMAIN_DB
+  # domain-service:
+  #   build:
+  #     context: .
+  #     dockerfile: ./packages/domain-service/Dockerfile
+  #   ports:
+  #     - "8001:8000"
+  #     - "9230:9229"
+  #   environment:
+  #     NODE_ENV: $NODE_ENV
+  #     LOG_LEVEL: $LOG_LEVEL
+  #     PORT: $PORT
+  #     DEBUG_PORT: $DEBUG_PORT
+  #     HOST: $HOST
+  #     DB_HOST: domain-service-db
+  #     DB_PORT: $DB_PORT
+  #     POSTGRES_USER: $POSTGRES_USER
+  #     POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+  #     POSTGRES_DB: $DOMAIN_DB
 
-    depends_on:
-      - domain-service-db
+  #   depends_on:
+  #     - domain-service-db

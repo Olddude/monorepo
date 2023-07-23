@@ -1,11 +1,10 @@
 import { JWS, JWK } from 'node-jose'
 import { Knex } from 'knex'
-import { Logger } from 'log4js'
 import { Router } from 'express'
 
 import { createExtractCredentialsMiddleware } from '../middlewares/extract-credentials.middleware'
 
-export async function createOAuthRouter(db: Knex, logger: Logger) {
+export async function createOAuthRouter(db: Knex) {
   const oauth = Router()
 
   const extractCredentialsMiddleware = createExtractCredentialsMiddleware()
@@ -27,12 +26,6 @@ export async function createOAuthRouter(db: Knex, logger: Logger) {
   })
 
   oauth.post('/oauth/token', extractCredentialsMiddleware, async (req, res) => {
-    logger.info('oauth token endpoint')
-    logger.info(req.headers)
-    logger.info(req.body)
-    logger.info(publicJWK)
-    logger.info(privateJWK)
-
     const { client_id, client_secret } = req.body
 
     const client = await db('clients').where({ id: client_id }).first()
@@ -49,7 +42,13 @@ export async function createOAuthRouter(db: Knex, logger: Logger) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       privateJWK as any,
     )
-      .update(JSON.stringify({ client_id }))
+      .update(
+        JSON.stringify({
+          client_id,
+          iss: 'http://localhost:8000',
+          aud: 'http://localhost:8001',
+        }),
+      )
       .final()
 
     res.json({ access_token: token, token_type: 'Bearer' })

@@ -15,7 +15,6 @@ async function main() {
     const database = await createDomainServiceDatabase(config.dbConfig)
     const auth = await createDomainServiceAuth(
       'http://localhost:8000/.well-known/jwks.json',
-      logger,
     )
     const router = await createDomainServiceRouter(auth, database)
     const app = await createDomainServiceApp(auth, router, logger)

@@ -5,9 +5,8 @@ import {
   Strategy as JwtStrategy,
   StrategyOptions,
 } from 'passport-jwt'
-import { Logger } from 'log4js'
 
-export async function createDomainServiceAuth(jwksUri: string, logger: Logger) {
+export async function createDomainServiceAuth(jwksUri: string) {
   const auth = passport
 
   const client = jwksClient({
@@ -15,16 +14,13 @@ export async function createDomainServiceAuth(jwksUri: string, logger: Logger) {
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 10,
-    fetcher(jwksUri) {
-      logger.info(jwksUri)
-      return Promise.resolve({ keys: {} })
-    },
   })
 
   const jwtOptions: StrategyOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     issuer: 'http://localhost:8000',
+    audience: 'http://localhost:8001',
     algorithms: ['RS256'],
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKeyProvider: (request, rawJwtToken, done) => {
       const jwtHeaderJson = Buffer.from(
         rawJwtToken.split('.')[0],

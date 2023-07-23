@@ -11,7 +11,7 @@ export async function createPostsRouter(auth: PassportStatic, db: Knex) {
 
   posts.get('/posts', jwksBearerAuthMiddleware, async (_req, res, next) => {
     try {
-      const users = await db('roles').select()
+      const users = await db('posts').select()
       res.json(users)
     } catch (err) {
       next(err)
