@@ -4,60 +4,63 @@ import {
   createErrorMiddleware,
   createSwaggerMiddlewares,
 } from '@monorepo/core'
-import { router } from './router'
 import { logger } from './logger'
 import { auth } from './auth'
 import { Paths } from './docs/paths'
 import { Schemas } from './docs/schemas'
 import cors = require('cors')
+import { Router } from 'express'
 
-const swaggerJson = {
-  swaggerDefinition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'Identity Service',
-      version: '1.0.0',
-    },
-    servers: [
-      {
-        url: 'http://localhost:8000',
-        description: 'Indentity server',
+export function createIdentityServiceApp(router: Router) {
+  const swaggerJson = {
+    swaggerDefinition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'Identity Service',
+        version: '1.0.0',
       },
-    ],
-    components: {
-      securitySchemes: {
-        basicAuth: {
-          type: 'http',
-          scheme: 'basic',
+      servers: [
+        {
+          url: 'http://localhost:8000',
+          description: 'Indentity server',
         },
+      ],
+      components: {
+        securitySchemes: {
+          basicAuth: {
+            type: 'http',
+            scheme: 'basic',
+          },
+        },
+        schemas: Schemas,
       },
-      schemas: Schemas,
+      security: [
+        {
+          basicAuth: [],
+        },
+      ],
+      paths: Paths,
     },
-    security: [
-      {
-        basicAuth: [],
-      },
+    apis: [],
+  }
+
+  const corsOptions = {
+    origin: [
+      'http://localhost:8001',
+      'http://localhost:3000',
+      'http://localhost:4200',
     ],
-    paths: Paths,
-  },
-  apis: [],
-}
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    credentials: true, // This allows the session cookie to be sent back and forth
+  }
 
-const corsOptions = {
-  origin: [
-    'http://localhost:8001',
-    'http://localhost:3000',
-    'http://localhost:4200',
-  ],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  credentials: true, // This allows the session cookie to be sent back and forth
+  const app = createApp()
+  app.use(cors(corsOptions))
+  app.use(createAuthInitializeMiddleware(auth))
+  app.use(router)
+  app.use('/swagger.json', (_req, res) => res.json(swaggerJson))
+  app.use('/swagger', ...createSwaggerMiddlewares(swaggerJson))
+  app.use(createErrorMiddleware(logger))
+  return app
 }
-
-export const app = createApp()
-app.use(cors(corsOptions))
-app.use(createAuthInitializeMiddleware(auth))
-app.use(router)
-app.use('/swagger.json', (_req, res) => res.json(swaggerJson))
-app.use('/swagger', ...createSwaggerMiddlewares(swaggerJson))
-app.use(createErrorMiddleware(logger))

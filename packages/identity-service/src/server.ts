@@ -1,4 +1,7 @@
+import { Express } from 'express'
 import * as http from 'node:http'
-import { app } from './app'
 
-export const server = http.createServer(app)
+export async function createIdentityServiceServer(app: Express) {
+  const server = http.createServer(app)
+  return server
+}

@@ -7,6 +7,8 @@ import {
 import { router } from './router'
 import { logger } from './logger'
 import { auth } from './auth'
+import { Paths } from './docs/paths'
+import { Schemas } from './docs/schemas'
 
 const swaggerMiddlewares = createSwaggerMiddlewares({
   swaggerDefinition: {
@@ -21,7 +23,7 @@ const swaggerMiddlewares = createSwaggerMiddlewares({
           type: 'oauth2',
           flows: {
             clientCredentials: {
-              tokenUrl: 'http://localhost:8000/oauth/token', // Your Identity server token endpoint
+              tokenUrl: 'http://localhost:8000/oauth/token',
               scopes: {
                 'write:*': 'write access',
                 'read:*': 'read access',
@@ -31,14 +33,14 @@ const swaggerMiddlewares = createSwaggerMiddlewares({
           },
         },
       },
-      schemas: {},
+      schemas: Schemas,
     },
     security: [
       {
-        OAuth2: ['write:*', 'read:*', 'delete:*'], // Define scopes here that apply for all routes
+        OAuth2: ['write:*', 'read:*', 'delete:*'],
       },
     ],
-    paths: {},
+    paths: Paths,
   },
   apis: [],
 })

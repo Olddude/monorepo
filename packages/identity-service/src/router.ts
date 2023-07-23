@@ -1,9 +1,12 @@
 import { createRouter } from '@monorepo/core'
-import { users } from './routes/users'
-import { roles } from './routes/roles'
-import { oauth } from './routes/oauth'
+import { createUsersRouter } from './routes/users'
+import { createRolesRouter } from './routes/roles'
+import { createOAuthRouter } from './routes/oauth'
 
-export const router = createRouter()
-router.use(users)
-router.use(roles)
-router.use(oauth)
+export async function createIdentityServerRouter() {
+  const router = createRouter()
+  router.use(await createUsersRouter())
+  router.use(await createRolesRouter())
+  router.use(await createOAuthRouter())
+  return router
+}

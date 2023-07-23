@@ -1,14 +1,21 @@
 import * as process from 'node:process'
 
-import { server } from './server'
+import { createIdentityServiceServer } from './server'
+import { createIdentityServiceApp } from './app'
+import { createIdentityServerRouter } from './router'
 import { config } from './config'
 import { logger } from './logger'
 import { db } from './db'
 
-function main() {
+async function main() {
   try {
     const { serverConfig } = config
     const { port } = serverConfig
+
+    const router = await createIdentityServerRouter()
+    const app = await createIdentityServiceApp(router)
+    const server = await createIdentityServiceServer(app)
+
     server.listen(port, () => {
       setTimeout(async () => {
         logger.info(config)
