@@ -1,12 +1,14 @@
-import { createRouter, createBasicAuthMiddleware } from '@monorepo/core'
-import { db } from '../db'
-import { auth } from '../auth'
 import { v4 } from 'uuid'
 import { hashSync } from 'bcrypt'
+import { PassportStatic } from 'passport'
+import { Knex } from 'knex'
+import { Router } from 'express'
 
-export async function createUsersRouter() {
+import { createBasicAuthMiddleware } from '../middlewares/basic-auth.middleware'
+
+export async function createUsersRouter(auth: PassportStatic, db: Knex) {
   const basicAuthMiddleware = createBasicAuthMiddleware(auth)
-  const users = createRouter()
+  const users = Router()
 
   users.get('/users', basicAuthMiddleware, async (req, res, next) => {
     try {

@@ -1,7 +1,16 @@
-import { createLogger } from '@monorepo/core'
-import { config } from './config'
+import { Logger, configure } from 'log4js'
 
-export const logger = createLogger({
-  level: config.loggerConfig.level,
-  name: config.loggerConfig.name,
-})
+export interface LoggerConfig {
+  level: string
+  name: string
+}
+
+export function createDomainServiceLogger(config: LoggerConfig) {
+  const logger: Logger = configure({
+    appenders: {
+      console: { type: 'console' },
+    },
+    categories: { default: { appenders: ['console'], level: config.level } },
+  }).getLogger(config.name)
+  return logger
+}

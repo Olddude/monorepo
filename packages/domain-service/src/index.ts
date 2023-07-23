@@ -1,22 +1,37 @@
 import * as process from 'node:process'
 
-import { server } from './server'
-import { config } from './config'
-import { logger } from './logger'
-import { db } from './db'
+import { createDomainServiceServer } from './server'
+import { createDomainServiceConfig } from './config'
+import { createDomainServiceLogger } from './logger'
+import { createDomainServiceDatabase } from './db'
+import { createDomainServiceAuth } from './auth'
+import { createDomainServiceRouter } from './router'
+import { createDomainServiceApp } from './app'
 
-function main() {
+async function main() {
   try {
+    const config = await createDomainServiceConfig()
+    const logger = await createDomainServiceLogger(config.loggerConfig)
+    const database = await createDomainServiceDatabase(config.dbConfig)
+    const auth = await createDomainServiceAuth(
+      'http://localhost:8000/.well-known/jwks.json',
+      logger,
+    )
+    const router = await createDomainServiceRouter(auth, database)
+    const app = await createDomainServiceApp(auth, router, logger)
+    const server = await createDomainServiceServer(app)
+
     const { serverConfig } = config
     const { port } = serverConfig
+
     server.listen(port, () => {
       setTimeout(async () => {
         logger.info(config)
-        await db.migrate.latest()
+        await database.migrate.latest()
       }, 5000)
     })
   } catch (error) {
-    logger.error(error)
+    console.error(error)
     process.exit(1)
   }
 }

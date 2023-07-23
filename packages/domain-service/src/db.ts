@@ -1,5 +1,20 @@
-import { createDb } from '@monorepo/core'
+import knex from 'knex'
 
-const { config } = require('./config')
+export interface DbConfig {
+  client: string
+  connection: {
+    host: string
+    user: string
+    password: string
+    database: string
+    port: number
+  }
+  migrations: {
+    directory: string
+  }
+}
 
-export const db = createDb(config.dbConfig)
+export function createDomainServiceDatabase(config: DbConfig) {
+  const db = knex(config)
+  return db
+}

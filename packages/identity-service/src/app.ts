@@ -1,17 +1,20 @@
-import {
-  createApp,
-  createAuthInitializeMiddleware,
-  createErrorMiddleware,
-  createSwaggerMiddlewares,
-} from '@monorepo/core'
-import { logger } from './logger'
-import { auth } from './auth'
+import * as cors from 'cors'
+import { Router } from 'express'
+import { PassportStatic } from 'passport'
+import * as express from 'express'
+import { Logger } from 'log4js'
+
+import { createErrorMiddleware } from './middlewares/error.middleware'
+import { createSwaggerMiddlewares } from './middlewares/swagger-middlewares'
 import { Paths } from './docs/paths'
 import { Schemas } from './docs/schemas'
-import cors = require('cors')
-import { Router } from 'express'
+import { createAuthInitializeMiddleware } from './middlewares/auth-initialize.middleware'
 
-export function createIdentityServiceApp(router: Router) {
+export function createIdentityServiceApp(
+  auth: PassportStatic,
+  router: Router,
+  logger: Logger,
+) {
   const swaggerJson = {
     swaggerDefinition: {
       openapi: '3.0.0',
@@ -55,7 +58,9 @@ export function createIdentityServiceApp(router: Router) {
     credentials: true, // This allows the session cookie to be sent back and forth
   }
 
-  const app = createApp()
+  const app = express()
+  app.use(express.urlencoded({ extended: true }))
+  app.use(express.json())
   app.use(cors(corsOptions))
   app.use(createAuthInitializeMiddleware(auth))
   app.use(router)

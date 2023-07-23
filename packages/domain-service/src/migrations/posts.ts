@@ -1,5 +1,6 @@
 import { v4 } from 'uuid'
 import { Post } from '../models/post'
+import { Knex } from 'knex'
 
 const posts: Post[] = [
   {
@@ -16,7 +17,7 @@ const posts: Post[] = [
   },
 ]
 
-export async function up(db) {
+export async function up(db: Knex) {
   await db.schema.createTable('posts', (table) => {
     table.uuid('id').primary()
     table.string('title').notNullable()
@@ -27,6 +28,6 @@ export async function up(db) {
   await db.batchInsert('posts', posts)
 }
 
-export async function down(db) {
+export async function down(db: Knex) {
   await db.schema.dropTableIfExists('posts')
 }

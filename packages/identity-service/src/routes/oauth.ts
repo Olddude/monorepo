@@ -1,13 +1,12 @@
-import {
-  createRouter,
-  createExtractCredentialsMiddleware,
-} from '@monorepo/core'
-import { db } from '../db'
 import { JWS, JWK } from 'node-jose'
-import { logger } from '../logger'
+import { Knex } from 'knex'
+import { Logger } from 'log4js'
+import { Router } from 'express'
 
-export async function createOAuthRouter() {
-  const oauth = createRouter()
+import { createExtractCredentialsMiddleware } from '../middlewares/extract-credentials.middleware'
+
+export async function createOAuthRouter(db: Knex, logger: Logger) {
+  const oauth = Router()
 
   const extractCredentialsMiddleware = createExtractCredentialsMiddleware()
 

@@ -6,6 +6,7 @@ import { Permission } from '../models/permission'
 import { Client } from '../models/client'
 import { Scope } from '../models/scope'
 import { Resource } from '../models/resource'
+import { Knex } from 'knex'
 
 const users: User[] = [
   {
@@ -111,7 +112,7 @@ const resourceScopes = [
   { resourceId: resources[0].id, scopeId: scopes[2].id },
 ]
 
-export async function up(db) {
+export async function up(db: Knex) {
   await db.schema.createTable('users', (table) => {
     table.uuid('id').primary()
     table.string('username').notNullable().unique()
@@ -193,7 +194,7 @@ export async function up(db) {
   await db.batchInsert('resource_scopes', resourceScopes)
 }
 
-export async function down(db) {
+export async function down(db: Knex) {
   await db.schema.dropTableIfExists('resource_scopes')
   await db.schema.dropTableIfExists('user_client_scopes')
   await db.schema.dropTableIfExists('user_roles')

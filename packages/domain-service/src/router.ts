@@ -1,6 +1,13 @@
-import { createRouter } from '@monorepo/core'
-import { posts } from './routes/posts'
+import { PassportStatic } from 'passport'
+import { createPostsRouter } from './routes/posts'
+import { Router } from 'express'
+import { Knex } from 'knex'
 
-export const router = createRouter()
-
-router.use(posts)
+export async function createDomainServiceRouter(
+  auth: PassportStatic,
+  db: Knex,
+) {
+  const router = Router()
+  router.use(await createPostsRouter(auth, db))
+  return router
+}
