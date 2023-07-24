@@ -47,15 +47,11 @@ export function createIdentityServiceApp(
     apis: [],
   }
 
-  const corsOptions = {
-    origin: [
-      'http://localhost:8001',
-      'http://localhost:3000',
-      'http://localhost:4200',
-    ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  const corsOptions: cors.CorsOptions = {
+    origin: '*',
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    credentials: true, // This allows the session cookie to be sent back and forth
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
   }
 
   const app = express()

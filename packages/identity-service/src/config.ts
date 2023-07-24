@@ -1,6 +1,38 @@
 import * as path from 'node:path'
 
-export function createIdentityServiceConfig() {
+export type IdentityServiceConfig = {
+  loggerConfig: {
+    level: string
+    name: string
+  }
+  serverConfig: {
+    environment: string
+    logLevel: string
+    port: number
+    debugPort: number
+    host: string
+  }
+  authConfig: {
+    username: string
+    password: string
+    audience: string
+  }
+  dbConfig: {
+    client: string
+    connection: {
+      host: string
+      user: string
+      password: string
+      database: string
+      port: number
+    }
+    migrations: {
+      directory: string
+    }
+  }
+}
+
+export function createIdentityServiceConfig(): IdentityServiceConfig {
   const config = {
     loggerConfig: {
       level: process.env.LOG_LEVEL || 'info',
@@ -16,6 +48,7 @@ export function createIdentityServiceConfig() {
     authConfig: {
       username: process.env.AUTH_USERNAME || 'admin',
       password: process.env.AUTH_PASSWORD || 'password',
+      audience: process.env.AUTH_AUDIENCE || 'http://localhost:8001',
     },
     dbConfig: {
       client: 'pg',

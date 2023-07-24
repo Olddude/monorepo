@@ -3,8 +3,14 @@ import { Knex } from 'knex'
 import { Router } from 'express'
 
 import { createExtractCredentialsMiddleware } from '../middlewares/extract-credentials.middleware'
+import { IdentityServiceConfig } from '../config'
+import { Logger } from 'log4js'
 
-export async function createOAuthRouter(db: Knex) {
+export async function createOAuthRouter(
+  db: Knex,
+  config: IdentityServiceConfig,
+  logger: Logger,
+) {
   const oauth = Router()
 
   const extractCredentialsMiddleware = createExtractCredentialsMiddleware()
@@ -34,6 +40,16 @@ export async function createOAuthRouter(db: Knex) {
       return res.status(401).json({ error: 'Invalid client credentials' })
     }
 
+    const issuer = `http://${config.serverConfig.host}:${config.serverConfig.port}`
+    const audience = config.authConfig.audience
+    const tokenPayload = JSON.stringify({
+      client_id,
+      iss: issuer,
+      aud: audience,
+    })
+
+    logger.info(tokenPayload)
+
     const token = await JWS.createSign(
       {
         format: 'compact',
@@ -42,13 +58,7 @@ export async function createOAuthRouter(db: Knex) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       privateJWK as any,
     )
-      .update(
-        JSON.stringify({
-          client_id,
-          iss: 'http://localhost:8000',
-          aud: 'http://localhost:8001',
-        }),
-      )
+      .update(tokenPayload)
       .final()
 
     res.json({ access_token: token, token_type: 'Bearer' })

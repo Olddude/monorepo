@@ -1,6 +1,38 @@
 import * as path from 'node:path'
 
-export function createDomainServiceConfig() {
+export type DomainServiceConfig = {
+  loggerConfig: {
+    level: string
+    name: string
+  }
+  serverConfig: {
+    environment: string
+    logLevel: string
+    port: number
+    debugPort: number
+    host: string
+  }
+  authConfig: {
+    username: string
+    password: string
+    server: string
+  }
+  dbConfig: {
+    client: string
+    connection: {
+      host: string
+      user: string
+      password: string
+      database: string
+      port: number
+    }
+    migrations: {
+      directory: string
+    }
+  }
+}
+
+export function createDomainServiceConfig(): DomainServiceConfig {
   const config = {
     loggerConfig: {
       level: process.env.LOG_LEVEL || 'info',
@@ -16,6 +48,7 @@ export function createDomainServiceConfig() {
     authConfig: {
       username: process.env.AUTH_USERNAME || 'admin',
       password: process.env.AUTH_PASSWORD || 'password',
+      server: process.env.AUTH_SERVER || 'http://localhost:8000',
     },
     dbConfig: {
       client: 'pg',

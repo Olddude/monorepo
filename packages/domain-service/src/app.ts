@@ -50,11 +50,11 @@ export async function createDomainServiceApp(
     apis: [],
   }
 
-  const corsOptions = {
-    origin: ['http://localhost:8000'],
+  const corsOptions: cors.CorsOptions = {
+    origin: '*',
+    allowedHeaders: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: ['*'],
-    credentials: true, // This allows the session cookie to be sent back and forth
+    credentials: true,
   }
 
   const app = express()

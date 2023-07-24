@@ -13,20 +13,19 @@ async function main() {
     const config = await createDomainServiceConfig()
     const logger = await createDomainServiceLogger(config.loggerConfig)
     const database = await createDomainServiceDatabase(config.dbConfig)
-    const auth = await createDomainServiceAuth(
-      'http://localhost:8000/.well-known/jwks.json',
-    )
+    const auth = await createDomainServiceAuth(config)
     const router = await createDomainServiceRouter(auth, database)
     const app = await createDomainServiceApp(auth, router, logger)
     const server = await createDomainServiceServer(app)
 
     const { serverConfig } = config
-    const { port } = serverConfig
+    const { port, host } = serverConfig
 
     server.listen(port, () => {
       setTimeout(async () => {
         logger.info(config)
         await database.migrate.latest()
+        logger.info(`listening on http://${host}:${port}`)
       }, 5000)
     })
   } catch (error) {
