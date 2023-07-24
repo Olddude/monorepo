@@ -1,3 +1,31 @@
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+**/*.tfstate
+**/*.tfstate.*.backup
+**/*.tfstate.backup
+
+# Crash log files
+**/crash.log
+
+# Ignore override files as they can contain sensitive data
+**/override.tf
+**/*_override.tf
+**/override.tf.json
+**/*_override.tf.json
+
+# Ignore CLI configuration files
+**/.terraformrc
+**/terraform.rc
+
+# Ignore Terraform provider plugins
+**/.terraform/
+
+# K8S
+**/*kubeconfig.yaml
+
+# Node stuff
 **/node_modules/
 **/coverage/
 **/dist

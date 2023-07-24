@@ -10,7 +10,7 @@
     "packages/*"
   ],
   "scripts": {
-    "clean": "git clean -X -d -f",
+    "preinstall": "yarn config set registry https://registry.yarnpkg.com",
     "lint": "eslint .",
     "build": "lerna run build",
     "postinstall": "yarn build",
