@@ -5,6 +5,15 @@
   "engines": {
     "node": ">=18"
   },
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "../*"
+    ],
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "clean": "rm -rf ./dist",
     "prebuild": "yarn clean",

@@ -6,9 +6,11 @@
     "node": ">=18"
   },
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
   "scripts": {
     "preinstall": "yarn config set registry https://registry.yarnpkg.com",
     "lint": "eslint .",
